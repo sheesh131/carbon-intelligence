@@ -1,0 +1,16 @@
+{
+  "name": "carbon-intelligence-backend-root",
+  "version": "1.0.0",
+  "description": "Root controller for Node.js Auth and Python AI services",
+  "scripts": {
+    "start:auth": "cd node_service && npm start",
+    "start:ai": "cd python_service && .\\venv_win\\Scripts\\activate && python -m uvicorn app.api.main:app --port 8000 --host 127.0.0.1",
+    "dev:auth": "cd node_service && npm run dev",
+    "dev:ai": "cd python_service && .\\venv_win\\Scripts\\activate && python -m uvicorn app.api.main:app --port 8000 --host 127.0.0.1 --reload",
+    "start": "concurrently \"npm run start:auth\" \"npm run start:ai\"",
+    "dev": "concurrently \"npm run dev:auth\" \"npm run dev:ai\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

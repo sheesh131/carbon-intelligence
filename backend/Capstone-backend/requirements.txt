@@ -1,0 +1,77 @@
+# Core dependencies for Sustainable Credit Risk AI System
+
+# Web framework and API
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+python-multipart>=0.0.6
+
+# Machine Learning and Data Science
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+scipy>=1.11.0
+
+# Explainability
+shap>=0.43.0
+
+# Sustainability and Carbon Tracking
+codecarbon>=2.3.0
+
+# Logging and utilities
+python-dotenv>=1.0.0
+pyyaml>=6.0
+bcrypt>=4.0.0
+python-jose>=3.3.0
+pyjwt>=2.8.0
+pyotp>=2.8.0
+cryptography>=40.0.0
+
+# Database and Storage
+sqlalchemy>=2.0.0,<3.0.0
+alembic>=1.13.0,<2.0.0
+redis>=5.0.0,<6.0.0
+celery>=5.3.0,<6.0.0
+
+# Security and Authentication
+cryptography>=44.0.1,<45.0.0
+python-jose[cryptography]>=3.3.0,<4.0.0
+passlib[bcrypt]>=1.7.4,<2.0.0
+pyotp>=2.9.0,<3.0.0
+
+# Configuration and Environment
+python-dotenv>=1.0.0,<2.0.0
+pydantic-settings>=2.1.0,<3.0.0
+
+# Logging and Monitoring
+structlog>=23.2.0,<24.0.0
+prometheus-client>=0.19.0,<1.0.0
+
+# HTTP and API clients
+httpx>=0.25.0,<1.0.0
+requests>=2.31.0,<3.0.0
+slowapi>=0.1.9,<1.0.0
+
+# Date and Time
+python-dateutil>=2.8.0,<3.0.0
+
+# Utilities
+tqdm>=4.66.0,<5.0.0
+click>=8.1.0,<9.0.0
+rich>=13.7.0,<14.0.0
+
+# Model Compression and Optimization
+torch-pruning>=1.3.0,<2.0.0
+
+# Bias Detection and Fairness
+fairlearn>=0.10.0,<1.0.0
+aif360>=0.5.0,<1.0.0
+
+# Data Validation
+great-expectations>=0.18.0,<1.0.0
+
+# Async support
+asyncio-mqtt>=0.16.0,<1.0.0
+aiofiles>=23.2.0,<24.0.0
+
+# Testing dependencies are intentionally kept out of runtime requirements.

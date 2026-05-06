@@ -1,0 +1,89 @@
+name: Security Scan with Trivy
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+# Required for uploading SARIF to Code Scanning
+permissions:
+  contents: read
+
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Free up disk space
+      run: |
+        # Remove unnecessary packages and files to free up space
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /opt/hostedtoolcache/CodeQL
+        sudo docker system prune -af
+        df -h
+
+
+
+    - name: Ensure data file exists
+      run: |
+        # Ensure data file exists or create sample for filesystem scanning
+        if [ ! -f "Bank_data.csv" ]; then
+          echo "Creating sample data file..."
+          echo "customer_id,age,gender,marital_status,employment_type,annual_income_inr,loan_amount_inr,loan_purpose,loan_term_months,credit_score,num_open_credit_accounts,num_delinquent_accounts,debt_to_income_ratio,past_default,default" > Bank_data.csv
+          echo "SAMPLE001,35,Male,Married,Salaried,500000,100000,Personal Loan,24,750,3,0,0.3,0,0" >> Bank_data.csv
+        fi
+
+    - name: Run Trivy filesystem scanner (lightweight)
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-fs-results.sarif'
+        scanners: 'vuln,secret,misconfig'
+        severity: 'CRITICAL,HIGH,MEDIUM'
+        ignore-unfixed: true
+
+    - name: Run Trivy config scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'config'
+        scan-ref: 'infrastructure/docker/Dockerfile'
+        format: 'table'
+        output: 'trivy-config-results.txt'
+        severity: 'CRITICAL,HIGH,MEDIUM'
+
+
+
+    - name: Display scan results summary
+      if: always()
+      run: |
+        echo "=== Security Scan Summary ==="
+        echo "📋 SARIF upload disabled (results visible in workflow logs)"
+        
+        if [ -f "trivy-fs-results.sarif" ]; then
+          echo "✅ Filesystem scan completed successfully"
+          echo "📄 Scan file generated: trivy-fs-results.sarif"
+        else
+          echo "❌ No filesystem scan results found"
+        fi
+
+    - name: Display config scan results
+      if: always()
+      run: |
+        echo "=== Dockerfile Configuration Scan Results ==="
+        cat trivy-config-results.txt || echo "No config scan results found"
+
+    - name: Clean up Docker images to free space
+      if: always()
+      run: |
+        docker system prune -af
+        docker volume prune -f
